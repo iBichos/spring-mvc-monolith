@@ -1,0 +1,69 @@
+/* Top-bar base */
+#top-bar {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-content: center;
+    -webkit-box-shadow: 2px 5px 16px 0px var(--secondary-bg-color), 5px 5px 50px 5px rgba(0,0,0,0);
+    box-shadow: 2px 5px 16px 0px var(--secondary-bg-color), 5px 5px 50px 5px rgba(0,0,0,0);
+}
+
+#top-bar .group {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+#top-bar .group .item {
+    display: flex;
+    margin: 1rem .8rem;
+}
+
+#top-bar .group .item:hover:not(#cart):hover {
+    -webkit-transition: all 0.5s 0s ease;
+    -moz-transition: all 0.5s 0s ease;
+    -o-transition: all 0.5s 0s ease;
+    transition: all 0.5s 0s ease;
+    color: var(--third-color);
+}
+
+
+#top-bar .group .item .text {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+/* Title */
+#title {
+    cursor: pointer;
+}
+
+/* Cart */
+#cart {
+    padding: .5rem;
+    cursor: pointer;
+}
+
+#cart-properties {
+    fill: var(--primary-color);
+}
+
+#cart-icon {
+    width: 1.7rem;
+    height: 1.7rem;
+    align-self: flex-end;
+}
+
+#cart-counter {
+    align-self: flex-start;
+}
+
+/* Profile */
+#profile-properties {
+    width: 1.7rem;
+    height: 1.7rem;
+}
