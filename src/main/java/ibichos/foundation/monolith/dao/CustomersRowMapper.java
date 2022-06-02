@@ -7,21 +7,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public class CustomerRowMapper implements RowMapper<Customer> {
+public class CustomersRowMapper implements RowMapper<Customer> {
 
-    private static final CustomerRowMapper instance = new CustomerRowMapper();
+    private static final CustomersRowMapper instance = new CustomersRowMapper();
 
-    private CustomerRowMapper() {}
+    private CustomersRowMapper() {}
 
-    public static CustomerRowMapper getInstance() {
+    public static CustomersRowMapper getInstance() {
         return instance;
     }
 
     @Override
     public Customer mapRow(ResultSet rs, int rowNum) throws SQLException {
         return Customer.builder()
-                .id(UUID.fromString(rs.getString("customer_id")))
-                .name(rs.getString("name"))
+                .customerId(UUID.fromString(rs.getString("customer_id")))
+                .firstName(rs.getString("first_name"))
+                .lastName(rs.getString("last_name"))
                 .email(rs.getString("email"))
                 .cpf(rs.getString("cpf"))
                 .phone(rs.getString("phone"))

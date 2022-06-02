@@ -16,7 +16,7 @@
     font-size: 35px;
     font-weight: 600;
     text-align: center;
-    line-height: 100px;
+    padding: 0.5rem;
     color: var(--primary-color);
     user-select: none;
     border-radius: 15px 15px 0 0;
@@ -114,17 +114,23 @@ form .field input[type="submit"] {
 form .field input[type="submit"]:active{
     transform: scale(0.95);
 }
-form .signup-link{
+form .form-link{
     color: var(--third-color);
     margin-top: 20px;
     text-align: center;
 }
 form .pass-link a,
-form .signup-link a{
+form .form-link a{
     color: var(--blue);
     text-decoration: none;
 }
 form .pass-link a:hover,
-form .signup-link a:hover{
+form .form-link a:hover{
     text-decoration: underline;
+}
+
+#lead {
+    font-style: italic;
+    font-size: 0.5em;
+    font-weight: 300;
 }

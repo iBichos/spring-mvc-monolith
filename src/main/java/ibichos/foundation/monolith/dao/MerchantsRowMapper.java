@@ -7,22 +7,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public class MerchantRowMapper implements RowMapper<Merchant> {
+public class MerchantsRowMapper implements RowMapper<Merchant> {
 
-private static final MerchantRowMapper instance = new MerchantRowMapper();
+private static final MerchantsRowMapper instance = new MerchantsRowMapper();
 
-private MerchantRowMapper(){}
+private MerchantsRowMapper(){}
 
-public static MerchantRowMapper getInstance(){
+public static MerchantsRowMapper getInstance(){
         return instance;
         }
 
 @Override
 public Merchant mapRow(ResultSet rs, int rowNum)throws SQLException {
         return Merchant.builder()
-        .id(UUID.fromString(rs.getString("merchant_id")))
-        .socialName(rs.getString("socialName"))
-        .ownerName(rs.getString("ownerName"))
+        .merchantId(UUID.fromString(rs.getString("merchant_id")))
+        .socialName(rs.getString("social_name"))
+        .ownerName(rs.getString("owner_name"))
         .email(rs.getString("email"))
         .cnpj(rs.getString("cnpj"))
         .phone(rs.getString("phone"))

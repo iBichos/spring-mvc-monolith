@@ -1,37 +1,75 @@
 package ibichos.foundation.monolith.controller;
 
 import ibichos.foundation.monolith.model.Cart;
+import ibichos.foundation.monolith.model.Product;
 import ibichos.foundation.monolith.service.CartService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.servlet.ModelAndView;
+import ibichos.foundation.monolith.service.ProductService;
 
-import javax.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 import java.util.UUID;
 
-@Controller
+@RestController
+@RequestMapping("/cart")
+@Slf4j
 public class CartController {
+
     @Autowired
     private CartService cartService;
 
-    @GetMapping("/add-to-cart/{productId}")
-    public ModelAndView addToCart(HttpSession session, ModelAndView model,
-                                 @PathVariable String productId){
+    @Autowired
+    private ProductService productService;
 
-        if (session.getAttribute("cart") != null) {
-            Cart cart = (Cart) session.getAttribute("cart");
-            cart.getProducts().add(cartService.getProductById(UUID.fromString(productId)));
-            session.setAttribute("cart", cart);
+    @GetMapping("/status")
+    public Cart status() {
+        Cart cart = cartService.getCart();
+        if (!cart.getProductsIdsAndAmounts().isEmpty()) {
+            cart.setTotalPrice(BigDecimal.ZERO);
+            cart.getProductsIdsAndAmounts().forEach((productId, amount) -> {
+                Product product = productService.getProduct(productId);
+                BigDecimal totalPrice = cart.getTotalPrice();
+                BigDecimal productTotalPrice = product.getPrice().multiply(BigDecimal.valueOf(amount));
+                cart.setTotalPrice(totalPrice.add(productTotalPrice));
+            });
+            cart.setIsEmpty(false);
         } else {
-            Cart cart = new Cart();
-            cart.getProducts().add(cartService.getProductById(UUID.fromString(productId)));
-            session.setAttribute("cart", cart);
+            cart.setTotalPrice(BigDecimal.ZERO);
+            cart.setIsEmpty(true);
         }
-        model.getModelMap().addAttribute("cartEmpty");
 
-        model.setViewName("redirect:/");
-        return model;
+
+        cartService.setCart(cart);
+        return cartService.getCart();
+    }
+
+    @PutMapping("/add/{productId}")
+    public Cart addProduct(@PathVariable UUID productId) {
+        Product product = productService.getProduct(productId);
+        cartService.addProduct(product.getProductId(), product.getAmountInStock());
+        return cartService.getCart();
+    }
+
+    @DeleteMapping("/remove/{productId}")
+    public Cart removeProduct(@PathVariable UUID productId) {
+        Product product = productService.getProduct(productId);
+        cartService.removeProduct(product.getProductId());
+        return cartService.getCart();
+    }
+
+    @PatchMapping("/increment/{productId}")
+    public Cart incrementProduct(@PathVariable UUID productId) {
+        Product product = productService.getProduct(productId);
+        cartService.incrementAmount(product.getProductId(), product.getAmountInStock());
+        return cartService.getCart();
+    }
+
+    @PatchMapping("/decrement/{productId}")
+    public Cart decrementProduct(@PathVariable UUID productId) {
+        Product product = productService.getProduct(productId);
+        cartService.decrementAmount(product.getProductId());
+        return cartService.getCart();
     }
 }

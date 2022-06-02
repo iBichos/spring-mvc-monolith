@@ -1,6 +1,5 @@
 package ibichos.foundation.monolith.dao;
 
-import ibichos.foundation.monolith.model.Customer;
 import ibichos.foundation.monolith.model.Product;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -9,20 +8,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public class ProductRowMapper implements RowMapper<Product> {
+public class ProductsRowMapper implements RowMapper<Product> {
 
-    private static final ProductRowMapper instance = new ProductRowMapper();
+    private static final ProductsRowMapper instance = new ProductsRowMapper();
 
-    private ProductRowMapper() {}
+    private ProductsRowMapper() {}
 
-    public static ProductRowMapper getInstance() {
+    public static ProductsRowMapper getInstance() {
         return instance;
     }
 
     @Override
     public Product mapRow(ResultSet rs, int rowNum) throws SQLException {
         return Product.builder()
-                .id(UUID.fromString(rs.getString("product_id")))
+                .productId(UUID.fromString(rs.getString("product_id")))
+                .merchantId(UUID.fromString(rs.getString("merchant_id")))
                 .name(rs.getString("name"))
                 .description(rs.getString("description"))
                 .monetaryUnit(rs.getString("monetary_unit"))

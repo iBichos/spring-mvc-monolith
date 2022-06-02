@@ -1,21 +1,17 @@
 package ibichos.foundation.monolith.model;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.util.UUID;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class Merchant {
-    private UUID id;
+@SuperBuilder
+public class Merchant extends Account {
+    private UUID merchantId;
     private String socialName;
     private String ownerName;
-    private String email;
-    private String password;
     private String cnpj;
-    private String phone;
-    private String address;
 }

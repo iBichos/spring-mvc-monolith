@@ -1,0 +1,90 @@
+#cart-dashboard {
+    display: flex;
+    flex-flow: row;
+}
+
+#cart-list {
+    display: flex;
+    flex-flow: column;
+}
+
+#cart-list .product {
+    display: flex;
+    flex-flow: row;
+}
+
+#cart-list .product-name {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    width: 30%;
+}
+
+
+#cart-list .product-image{
+    width: 10%;
+}
+
+#cart-list .product-price {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-content: center;
+    font-weight: 300;
+    width: 10%;
+}
+
+#cart-list .amount {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 300;
+    width: 20%;
+}
+
+#cart-list .amount button {
+    width: 10%;
+    border-width: 1px;
+    border-radius: 10px;
+}
+
+#cart-list .amount button:hover {
+    cursor: pointer;
+}
+
+#cart-dashboard #payment {
+    display: flex;
+    flex-flow: column;
+    border: solid;
+    border-width: 1px;
+    border-color: var(--secondary-bg-color);
+    border-radius: 5px;
+    width: 15%;
+    padding: 2%;
+    justify-content: space-around;
+}
+
+#cart-dashboard #payment-actions button {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 5%;
+    border-width: 1px;
+    border-color: var(--third-bg-color);
+    border-radius: 25px;
+}
+
+#buy-now {
+    background-color: #ffac3f;
+}
+
+#buy-now:hover {
+    cursor: pointer;
+}
+
+#cart-dashboard #payment-tongue {
+    margin-top: 1rem;
+    display: flex;
+    flex-flow: row;
+    justify-content: flex-start;
+}

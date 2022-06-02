@@ -7,22 +7,24 @@
         <title>iBichos</title>
     </jsp:attribute>
     <jsp:attribute name="style">
-        <link rel="stylesheet" type="text/css" href="resources/css/catalog.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="/resources/css/catalog.css" media="screen"/>
+    </jsp:attribute>
+    <jsp:attribute name="scripts">
+         <script src="/resources/js/showProduct.js"></script>
     </jsp:attribute>
     <jsp:body>
-        <div id="card-container">
+        <div id="catalog">
             <c:forEach var="product" items="${products}">
-                <figure class="card">
-                    <img src="resources/images/<c:out value="${product.id}"></c:out>.png" alt="Imagem do produto" />
-                    <figcaption>
-                        <h3><c:out value="${product.name}"></c:out></h3>
-                        <p><c:out value="${product.description}"></c:out></p>
-                        <div class="price">
-                            R$<c:out value="${product.price}"></c:out>
-                        </div>
-                    </figcaption><i class="ion-android-cart"></i>
-                    <a href="/add-to-cart/<c:out value="${product.id}"></c:out>"></a>
-                </figure>
+                <div class="product">
+                    <img src="/resources/images/<c:out value="${product.productId}"></c:out>.png"
+                         alt="Imagem do produto"/>
+                    <h3 class="product-name"><c:out value="${product.name}"></c:out></h3>
+                    <div class="product-price">
+                        <div class="monetary-symbol">R$</div>
+                        <c:out value="${product.price}"></c:out>
+                    </div>
+                    <span id="productId" class="hidden"><c:out value="${product.productId}"></c:out></span>
+                </div>
             </c:forEach>
         </div>
     </jsp:body>
