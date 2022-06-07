@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -39,5 +40,9 @@ public class OrderService {
         });
 
         return order;
+    }
+
+    public List<Order> orders(UUID orderId) {
+        return ordersDAO.select(orderId);
     }
 }

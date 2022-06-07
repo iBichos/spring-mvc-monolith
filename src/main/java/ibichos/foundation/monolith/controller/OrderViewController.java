@@ -23,8 +23,21 @@ public class OrderViewController {
     private AccountService accountService;
 
     @GetMapping("/create")
-    public String createOrder(Model model) {;
-        model.addAttribute("order", orderService.newOrder(cartService.status(), accountService.getCustomer()));
-        return "order";
+    public String createOrder(Model model) {
+        if (accountService.isLoggedIn() && accountService.isCustomer()) {
+            model.addAttribute("order", orderService.newOrder(cartService.status(), accountService.getCustomer()));
+            cartService.discard();
+            return "order";
+        }
+        return "redirect:/";
+    }
+
+    @GetMapping("/history")
+    public String orderHistory(Model model) {
+        if (accountService.isLoggedIn() && accountService.isCustomer()) {
+            model.addAttribute("orders", orderService.orders(accountService.getCustomer().getCustomerId()));
+            return "order-list";
+        }
+        return "redirect:/";
     }
 }

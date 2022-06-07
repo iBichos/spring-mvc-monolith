@@ -1,0 +1,12 @@
+.order-details, .order-title {
+    display: flex;
+    flex-flow: row;
+}
+
+.orders h1 {
+    text-align: center;
+}
+
+.order-date, .order-id {
+    padding: 1rem;
+}

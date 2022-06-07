@@ -1,7 +1,6 @@
 package ibichos.foundation.monolith.dao;
 
 import ibichos.foundation.monolith.mapper.OrdersMapper;
-import ibichos.foundation.monolith.model.Merchant;
 import ibichos.foundation.monolith.model.Order;
 
 import lombok.extern.slf4j.Slf4j;
@@ -14,10 +13,10 @@ import java.util.*;
 @Repository
 @Slf4j
 public class OrdersDAO extends AbstractDAO {
-    private static final String SELECT_ORDERS_BY_ORDER_ID = "/* OrdersDAO */ " +
+    private static final String SELECT_ORDERS_BY_CUSTOMER_ID = "/* OrdersDAO */ " +
             "SELECT o.order_id, o.customer_id, o.checkout_hour " +
             "FROM orders o " +
-            "WHERE o.order_id = :order_id ";
+            "WHERE o.customer_id = :customer_id ";
 
     private static final String INSERT = "/* OrdersDAO */ " +
             "INSERT INTO orders (order_id, customer_id, checkout_hour) " +
@@ -26,10 +25,10 @@ public class OrdersDAO extends AbstractDAO {
         super(namedParameterJdbcTemplate);
     }
 
-    public Optional<Order> selectByOrderId(UUID productId) {
+    public List<Order> select(UUID orderId) {
         Map<String, UUID> params = new HashMap<>();
-        params.put("order_id", productId);
-        return namedParameterJdbcTemplate.query(SELECT_ORDERS_BY_ORDER_ID, params, OrdersMapper.getInstance()).stream().findFirst();
+        params.put("customer_id", orderId);
+        return namedParameterJdbcTemplate.query(SELECT_ORDERS_BY_CUSTOMER_ID, params, OrdersMapper.getInstance());
     }
 
     public Order insert(Order order) {

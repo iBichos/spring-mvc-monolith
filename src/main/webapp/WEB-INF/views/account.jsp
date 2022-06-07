@@ -18,7 +18,7 @@
                     <c:when test="${isCustomer}">
                     <h3>Área do cliente</h3>
                     <a href="/customer"><h2>Meus dados</h2></a>
-                    <a href="/orders"><h2>Pedidos</h2></a>
+                    <a href="/order/history"><h2>Pedidos</h2></a>
                     </c:when>
                     <c:otherwise>
                     <h3>Área do parceiro</h3>
