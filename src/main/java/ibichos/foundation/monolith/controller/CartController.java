@@ -1,20 +1,21 @@
 package ibichos.foundation.monolith.controller;
 
 import ibichos.foundation.monolith.model.Cart;
-import ibichos.foundation.monolith.model.Product;
 import ibichos.foundation.monolith.service.CartService;
 import ibichos.foundation.monolith.service.ProductService;
-
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/cart")
-@Slf4j
 public class CartController {
 
     @Autowired
@@ -25,51 +26,30 @@ public class CartController {
 
     @GetMapping("/status")
     public Cart status() {
-        Cart cart = cartService.getCart();
-        if (!cart.getProductsIdsAndAmounts().isEmpty()) {
-            cart.setTotalPrice(BigDecimal.ZERO);
-            cart.getProductsIdsAndAmounts().forEach((productId, amount) -> {
-                Product product = productService.getProduct(productId);
-                BigDecimal totalPrice = cart.getTotalPrice();
-                BigDecimal productTotalPrice = product.getPrice().multiply(BigDecimal.valueOf(amount));
-                cart.setTotalPrice(totalPrice.add(productTotalPrice));
-            });
-            cart.setIsEmpty(false);
-        } else {
-            cart.setTotalPrice(BigDecimal.ZERO);
-            cart.setIsEmpty(true);
-        }
-
-
-        cartService.setCart(cart);
-        return cartService.getCart();
+        return cartService.status();
     }
 
     @PutMapping("/add/{productId}")
     public Cart addProduct(@PathVariable UUID productId) {
-        Product product = productService.getProduct(productId);
-        cartService.addProduct(product.getProductId(), product.getAmountInStock());
-        return cartService.getCart();
+        cartService.add(productService.getProduct(productId));
+        return cartService.status();
     }
 
     @DeleteMapping("/remove/{productId}")
     public Cart removeProduct(@PathVariable UUID productId) {
-        Product product = productService.getProduct(productId);
-        cartService.removeProduct(product.getProductId());
-        return cartService.getCart();
+        cartService.remove(productService.getProduct(productId));
+        return cartService.status();
     }
 
     @PatchMapping("/increment/{productId}")
     public Cart incrementProduct(@PathVariable UUID productId) {
-        Product product = productService.getProduct(productId);
-        cartService.incrementAmount(product.getProductId(), product.getAmountInStock());
-        return cartService.getCart();
+        cartService.increment(productService.getProduct(productId));
+        return cartService.status();
     }
 
     @PatchMapping("/decrement/{productId}")
     public Cart decrementProduct(@PathVariable UUID productId) {
-        Product product = productService.getProduct(productId);
-        cartService.decrementAmount(product.getProductId());
-        return cartService.getCart();
+        cartService.decrement(productService.getProduct(productId));
+        return cartService.status();
     }
 }

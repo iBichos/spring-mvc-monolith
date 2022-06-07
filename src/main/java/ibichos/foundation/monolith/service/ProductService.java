@@ -1,13 +1,14 @@
 package ibichos.foundation.monolith.service;
 
 import ibichos.foundation.monolith.dao.ProductsDAO;
+import ibichos.foundation.monolith.model.Merchant;
 import ibichos.foundation.monolith.model.Product;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -20,15 +21,30 @@ public class ProductService {
     }
 
     public Product getProduct(UUID productId) {
-        Optional<Product> product = productsDAO.selectById(productId);
-        return product.orElse(null);
+        return productsDAO.selectById(productId).orElseThrow();
     }
 
     public List<Product> getProducts(List<UUID> productsIds) {
         return productsDAO.selectByIds(productsIds);
     }
 
-    public List<UUID> getCategoriesIds(UUID productId) {
-        return productsDAO.aggregateCategoriesIds(productId);
+    public Product getDummyProduct() {
+        return Product.builder().name("Nome do produto").description("Descrição do produto").price(BigDecimal.ZERO).amountInStock(0).build();
+    }
+
+    public void createProduct(Product product) {
+        productsDAO.insert(product);
+    }
+
+    public void updateProduct(Product product) {
+        productsDAO.update(product);
+    }
+
+    public void deleteProduct(Product product) {
+        productsDAO.delete(product);
+    }
+
+    public List<Product> getProductsByMerchantId(UUID merchantId) {
+        return productsDAO.selectByMerchantId(merchantId);
     }
 }

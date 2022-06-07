@@ -1,4 +1,4 @@
-package ibichos.foundation.monolith.dao;
+package ibichos.foundation.monolith.mapper;
 
 import ibichos.foundation.monolith.model.Order;
 
@@ -8,18 +8,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public class OrdersRowMapper implements RowMapper<Order> {
-    private static final OrdersRowMapper instance = new OrdersRowMapper();
+public class OrdersMapper implements RowMapper<Order> {
+    private static final OrdersMapper instance = new OrdersMapper();
 
-    private OrdersRowMapper(){}
+    private OrdersMapper(){}
 
-    public static OrdersRowMapper getInstance(){
+    public static OrdersMapper getInstance(){
         return instance;
     }
 
     @Override
     public Order mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return Order.builder()
+        return Order
+                .builder()
                 .orderId(UUID.fromString(rs.getString("order_id")))
                 .customerId(UUID.fromString(rs.getString("customer_id")))
                 .checkoutHour(rs.getTimestamp("checkout_hour"))

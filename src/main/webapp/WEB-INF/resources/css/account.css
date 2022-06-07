@@ -1,0 +1,9 @@
+#account {
+    display: flex;
+    flex-flow: row;
+}
+
+.menu {
+    display: flex;
+    flex-flow: column;
+}

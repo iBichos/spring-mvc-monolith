@@ -1,15 +1,17 @@
 package ibichos.foundation.monolith.service;
 
 import ibichos.foundation.monolith.model.Cart;
+import ibichos.foundation.monolith.model.Product;
+import ibichos.foundation.monolith.model.ProductAmount;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @SessionScope
@@ -18,66 +20,61 @@ public class CartService {
     @Autowired
     private Cart cart;
 
-    public Cart addProduct(UUID productId, Integer amountInStock) {
-        cart.getProductsIdsAndAmounts().putIfAbsent(productId, 0);
-        return incrementAmount(productId, amountInStock);
+    public void add(Product product) {
+        if (cart.getProductAmounts()
+                .stream()
+                .anyMatch(productAmount -> productAmount.getProduct().getProductId().equals(product.getProductId())))
+            increment(product);
+        else
+            cart.getProductAmounts().add(ProductAmount.builder().product(product).amount(1).build());
     }
 
-    public Cart incrementAmount(UUID productId, Integer amountInStock) {
-        if (cart.getProductsIdsAndAmounts().get(productId) == null) {
-            return cart;
-        }
-        Integer currentAmount = cart.getProductsIdsAndAmounts().get(productId);
-        if (currentAmount < amountInStock) {
-            cart.getProductsIdsAndAmounts().put(productId, currentAmount + 1);
-            cart.setTotalAmount(cart.getTotalAmount() + 1);
-        }
-        return cart;
+    public void increment(Product product) {
+        cart.getProductAmounts()
+                .stream()
+                .filter(productAmount -> productAmount.getProduct().getProductId().equals(product.getProductId()))
+                .findAny()
+                .ifPresent(productAmount -> {
+                    if (productAmount.getAmount() <= productAmount.getProduct().getAmountInStock())
+                        productAmount.setAmount(productAmount.getAmount() + 1);
+                });
     }
 
-    public Cart decrementAmount(UUID productId) {
-        if (cart.getProductsIdsAndAmounts().get(productId) == null) {
-            return cart;
-        }
-        Integer currentAmount = cart.getProductsIdsAndAmounts().get(productId);
-        if (currentAmount.equals(0)) {
-            cart.getProductsIdsAndAmounts().remove(productId);
-            return cart;
-        }
-        cart.getProductsIdsAndAmounts().put(productId, currentAmount - 1);
-        cart.setTotalAmount(cart.getTotalAmount() - 1);
-        return cart;
+    public void decrement(Product product) {
+        cart.getProductAmounts()
+                .stream()
+                .filter(productAmount -> productAmount.getProduct().getProductId().equals(product.getProductId()))
+                .findAny()
+                .ifPresent(productAmount -> {
+                    if (productAmount.getAmount() > 0)
+                        productAmount.setAmount(productAmount.getAmount() - 1);
+                });
     }
 
-    public Cart removeProduct(UUID productId) {
-        if (cart.getProductsIdsAndAmounts().get(productId) == null) {
-            return cart;
-        }
-        return decrementAmount(productId);
+    public void remove(Product product) {
+        cart.getProductAmounts()
+                .removeIf(productAmount -> productAmount.getProduct().getProductId().equals(product.getProductId()));
     }
 
-    public Integer getTotalAmount() {
-        return cart.getProductsIdsAndAmounts().values().stream().mapToInt(Integer::intValue).sum();
-    }
-
-    public List<UUID> getProductsIds() {
-        return new ArrayList<>(cart.getProductsIdsAndAmounts().keySet());
-    }
-
-    public Map<UUID, Integer> tuples() {
-        return cart.getProductsIdsAndAmounts();
-    }
-
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
-    }
-
-    public Cart discard() {
+    public void discard() {
         cart = new Cart();
+    }
+
+    public List<Integer> amounts() {
+        return cart.getProductAmounts()
+                .stream()
+                .map(ProductAmount::getAmount)
+                .collect(Collectors.toList());
+    }
+
+    public List<ProductAmount> productAmounts() {
+        return cart.getProductAmounts();
+    }
+
+    public Cart status() {
+        cart.setTotalAmount(amounts().stream().filter(Objects::nonNull).reduce(Integer::sum).orElse(0));
+        cart.setTotalPrice(productAmounts().stream().map(productAmount -> productAmount.getProduct().getPrice().multiply(BigDecimal.valueOf(productAmount.getAmount()))).reduce(BigDecimal.ZERO, BigDecimal::add));
+        cart.setIsEmpty(cart.getProductAmounts().isEmpty());
         return cart;
     }
 }

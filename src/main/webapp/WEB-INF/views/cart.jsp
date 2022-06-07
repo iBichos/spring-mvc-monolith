@@ -11,7 +11,7 @@
     </jsp:attribute>
     <jsp:body>
         <c:choose>
-            <c:when test="${!tuples.isEmpty()}">
+            <c:when test="${!productAmounts.isEmpty()}">
                 <div id="cart-dashboard">
                     <div id="cart-list">
                         <div class="product">
@@ -20,20 +20,20 @@
                             <div class="product-price"><p>Preço</p></div>
                             <div class="amount"><p>Quantidade</p></div>
                         </div>
-                        <c:forEach var="tuple" items="${tuples}">
+                        <c:forEach var="productAmount" items="${productAmounts}">
                             <div class="product">
-                                <img class="product-image" src="/resources/images/<c:out value="${tuple.key.productId}"></c:out>.png"
+                                <img class="product-image" src="/resources/images/${productAmount.product.productId}.png"
                                      alt="Imagem do produto"/>
                                 <div class="product-name">
-                                    <h3><c:out value="${tuple.key.name}"></c:out></h3>
+                                    <h3>${productAmount.product.name}</h3>
                                 </div>
                                 <div class="product-price">
-                                    <p><c:out value="${tuple.key.price}"></c:out></p>
+                                    <p>${productAmount.product.price}</p>
                                 </div>
                                 <div class="amount">
-                                    <button class="increment-to-cart" value="<c:out value="${tuple.key.productId}"></c:out>">▲</button>
-                                    <p id="<c:out value="${tuple.key.productId}"></c:out>"><c:out value="${tuple.value}"></c:out></p>
-                                    <button class="decrement-to-cart" value="<c:out value="${tuple.key.productId}"></c:out>">▼</button>
+                                    <button class="increment-to-cart" value="${productAmount.product.productId}">▲</button>
+                                    <p id="${productAmount.product.productId}">${productAmount.amount}</p>
+                                    <button class="decrement-to-cart" value="${productAmount.product.productId}">▼</button>
                                 </div>
                             </div>
                         </c:forEach>
@@ -46,10 +46,17 @@
                                 0
                             </div>
                         </div>
-
-                        <div id="payment-actions">
-                            <button id="buy-now" value="<c:out value="${tuple.key.productId}"></c:out>">Finalizar</button>
-                        </div>
+                        <c:choose>
+                            <c:when test="${!isMerchant}">
+                                <a id="payment-actions" href="/order/create">
+                                    <button id="buy-now">Finalizar</button>
+                                </a>
+                            </c:when>
+                            <c:otherwise>
+                                <br>
+                                <p>Você precisa ser um cliente para prosseguir :(</p>
+                            </c:otherwise>
+                        </c:choose>
                     </aside>
                 </div>
             </c:when>

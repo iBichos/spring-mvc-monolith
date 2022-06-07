@@ -11,11 +11,15 @@ public class CustomerService {
     @Autowired
     private CustomersDAO customersDAO;
 
-    public Customer createCustomer(Customer customer) {
-        return customersDAO.insert(customer);
+    public void createCustomer(Customer customer) {
+        customersDAO.insert(customer);
     }
 
     public Customer getCustomer(String email, String password) {
         return customersDAO.selectByEmailAndPassword(email, password).orElse(null);
+    }
+
+    public void updateCustomer(Customer customer) {
+        customersDAO.update(customer);
     }
 }

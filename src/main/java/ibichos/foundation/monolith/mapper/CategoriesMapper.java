@@ -1,4 +1,4 @@
-package ibichos.foundation.monolith.dao;
+package ibichos.foundation.monolith.mapper;
 
 import ibichos.foundation.monolith.model.Category;
 
@@ -8,19 +8,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public class CategoriesRowMapper implements RowMapper<Category> {
+public class CategoriesMapper implements RowMapper<Category> {
 
-    private static final CategoriesRowMapper instance = new CategoriesRowMapper();
+    private static final CategoriesMapper instance = new CategoriesMapper();
 
-    private CategoriesRowMapper() {}
+    private CategoriesMapper() {}
 
-    public static CategoriesRowMapper getInstance() {
+    public static CategoriesMapper getInstance() {
         return instance;
     }
 
     @Override
     public Category mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return Category.builder()
+        return Category
+                .builder()
                 .categoryId(UUID.fromString(rs.getString("category_id")))
                 .name(rs.getString("name"))
                 .description(rs.getString("description"))

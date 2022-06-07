@@ -1,16 +1,19 @@
-function updateCart() {
+function update() {
     $.ajax({
         type: 'GET',
         url: '/cart/status',
         dataType: 'json',
         async: false,
-        success: function (data) {
-            $("#cart-counter").text(data.totalAmount);
-            $("#cart-total-price").text(data.totalPrice);
-            console.log(data);
+        success: function (cart) {
+            $("#cart-counter").text(cart.totalAmount);
+            $("#cart-total-price").text(cart.totalPrice);
+            cart.productAmounts.forEach(productAmount => {
+                $("#" + productAmount.product.productId).text(productAmount.amount)
+            })
+            console.log(cart);
         },
-        error: function (data) {
-            console.log(data);
+        error: function (error) {
+            console.log(error);
         }
     });
 }
@@ -21,15 +24,12 @@ $('#add-to-cart').click(function () {
         url: '/cart/add/' + $(this).val(),
         dataType: 'json',
         async: false,
-        success: function (data) {
-            console.log(data);
-        },
-        error: function (data) {
-            console.log(data);
+        error: function (error) {
+            console.log(error);
         }
     });
 
-    updateCart();
+    update();
 
     location.href = '/cart/'
 });
@@ -40,15 +40,12 @@ $('#remove-from-cart').click(function () {
         url: '/cart/remove/' + $(this).val(),
         dataType: 'json',
         async: false,
-        success: function (data) {
-            console.log(data);
-        },
-        error: function (data) {
-            console.log(data);
+        error: function (error) {
+            console.log(error);
         }
     });
 
-    updateCart();
+    update();
 });
 
 $('.increment-to-cart').click(function () {
@@ -58,15 +55,12 @@ $('.increment-to-cart').click(function () {
         url: '/cart/increment/' + productId,
         dataType: 'json',
         async: false,
-        success: function (data) {
-            $("#" + productId).text(data.productsIdsAndAmounts[productId])
-        },
-        error: function (data) {
-            console.log(data);
+        error: function (error) {
+            console.log(error);
         }
     });
 
-    updateCart();
+    update();
 });
 
 $('.decrement-to-cart').click(function () {
@@ -76,15 +70,12 @@ $('.decrement-to-cart').click(function () {
         url: '/cart/decrement/' + productId,
         dataType: 'json',
         async: false,
-        success: function (data) {
-            $("#" + productId).text(data.productsIdsAndAmounts[productId])
-        },
-        error: function (data) {
-            console.log(data);
+        error: function (error) {
+            console.log(error);
         }
     });
 
-    updateCart();
+    update();
 });
 
-updateCart();
+update();

@@ -2,6 +2,8 @@ package ibichos.foundation.monolith.service;
 
 import ibichos.foundation.monolith.model.Account;
 
+import ibichos.foundation.monolith.model.Customer;
+import ibichos.foundation.monolith.model.Merchant;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
 
@@ -9,13 +11,13 @@ import org.springframework.web.context.annotation.SessionScope;
 @SessionScope
 public class AccountService {
     private Boolean isLoggedIn = false;
-
     private Boolean isCustomer = true;
-
     private Boolean isMerchant = false;
+    private Account account;
 
     public Boolean login(Account account) {
         if (account != null) {
+            this.account = account;
             isLoggedIn = true;
         }
         return isLoggedIn;
@@ -54,5 +56,17 @@ public class AccountService {
 
     public Boolean isMerchant() {
         return isMerchant;
+    }
+
+    public Customer getCustomer() {
+        return (Customer) account;
+    }
+
+    public Merchant getMerchant() {
+        return (Merchant) account;
+    }
+
+    public Account getAccount() {
+        return account;
     }
 }

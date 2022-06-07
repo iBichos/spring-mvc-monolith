@@ -1,4 +1,4 @@
-package ibichos.foundation.monolith.dao;
+package ibichos.foundation.monolith.mapper;
 
 import ibichos.foundation.monolith.model.Customer;
 import org.springframework.jdbc.core.RowMapper;
@@ -7,19 +7,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public class CustomersRowMapper implements RowMapper<Customer> {
+public class CustomersMapper implements RowMapper<Customer> {
 
-    private static final CustomersRowMapper instance = new CustomersRowMapper();
+    private static final CustomersMapper instance = new CustomersMapper();
 
-    private CustomersRowMapper() {}
+    private CustomersMapper() {}
 
-    public static CustomersRowMapper getInstance() {
+    public static CustomersMapper getInstance() {
         return instance;
     }
 
     @Override
     public Customer mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return Customer.builder()
+        return Customer
+                .builder()
                 .customerId(UUID.fromString(rs.getString("customer_id")))
                 .firstName(rs.getString("first_name"))
                 .lastName(rs.getString("last_name"))

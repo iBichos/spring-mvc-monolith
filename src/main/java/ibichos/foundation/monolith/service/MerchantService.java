@@ -26,4 +26,8 @@ public class MerchantService {
     public Merchant createMerchant(Merchant merchant) {
         return merchantsDAO.insert(merchant);
     }
+
+    public void updateMerchant(Merchant merchant) {
+        merchantsDAO.update(merchant);
+    }
 }

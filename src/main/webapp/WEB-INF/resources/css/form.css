@@ -7,7 +7,6 @@
     width: 30%;
     background: var(--primary-bg-color);
     border-radius: 15px;
-    box-shadow: 0px 15px 20px rgba(0,0,0,0.1);
     margin-left: auto;
     margin-right: auto;
 }
@@ -133,4 +132,10 @@ form .form-link a:hover{
     font-style: italic;
     font-size: 0.5em;
     font-weight: 300;
+}
+
+form #image {
+    border: none;
+    padding: 0;
+    width: 100%;
 }

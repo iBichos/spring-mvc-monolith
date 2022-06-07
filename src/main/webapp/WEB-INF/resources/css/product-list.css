@@ -1,0 +1,34 @@
+.product-image {
+    width: 10%;
+}
+
+.product {
+    display: flex;
+    flex-flow: row;
+}
+
+.product-details {
+    width: 80%;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.product-details > * {
+    padding: 1rem;
+}
+
+.product-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.product-actions > * {
+    padding: 1rem;
+}
+
+.products h1 {
+    text-align: center;
+}

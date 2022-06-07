@@ -27,8 +27,4 @@ public class CategoryService {
     public List<Category> getCategories(List<UUID> categoriesIds) {
         return categoriesDAO.selectByIds(categoriesIds);
     }
-
-    public List<UUID> getProductsIds(UUID categoryId) {
-        return categoriesDAO.aggregateProductsIds(categoryId);
-    }
 }

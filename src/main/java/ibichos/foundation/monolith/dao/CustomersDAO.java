@@ -1,5 +1,6 @@
 package ibichos.foundation.monolith.dao;
 
+import ibichos.foundation.monolith.mapper.CustomersMapper;
 import ibichos.foundation.monolith.model.Customer;
 
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,11 @@ public class CustomersDAO extends AbstractDAO {
             "SELECT c.customer_id, c.first_name, c.last_name, c.email, c.password, c.cpf, c.phone, c.address " +
             "FROM customers c " +
             "WHERE c.email=:email AND c.password=:password ";
+
+    private static final String UPDATE = "/* CustomersDAO */ " +
+            "UPDATE customers " +
+            "SET first_name = :first_name, last_name = :last_name, cpf = :cpf, phone = :phone, address = :address " +
+            "WHERE customer_id::varchar = :customer_id AND email = :email ";
 
     public CustomersDAO(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         super(namedParameterJdbcTemplate);
@@ -57,7 +63,7 @@ public class CustomersDAO extends AbstractDAO {
     public Optional<Customer> selectByEmail(String email) {
         Map<String, String> params = new HashMap<>();
         params.put("email", email);
-        return namedParameterJdbcTemplate.query(SELECT_CUSTOMER_BY_EMAIL, params, CustomersRowMapper.getInstance()).stream().findFirst();
+        return namedParameterJdbcTemplate.query(SELECT_CUSTOMER_BY_EMAIL, params, CustomersMapper.getInstance()).stream().findFirst();
     }
 
     public Optional<Customer> selectByEmailAndPassword(String email, String password) {
@@ -65,6 +71,19 @@ public class CustomersDAO extends AbstractDAO {
         params.put("email", email);
         params.put("password", password);
 
-        return namedParameterJdbcTemplate.query(SELECT_CUSTOMER_BY_EMAIL_AND_PASSWORD, params, CustomersRowMapper.getInstance()).stream().findFirst();
+        return namedParameterJdbcTemplate.query(SELECT_CUSTOMER_BY_EMAIL_AND_PASSWORD, params, CustomersMapper.getInstance()).stream().findFirst();
+    }
+
+    public void update(Customer customer) {
+        Map<String, String> params = new HashMap<>();
+        params.put("customer_id", customer.getCustomerId().toString());
+        params.put("email", customer.getEmail());
+        params.put("first_name", customer.getFirstName());
+        params.put("last_name", customer.getLastName());
+        params.put("cpf", customer.getCpf());
+        params.put("address", customer.getAddress());
+        params.put("phone", customer.getPhone());
+
+        namedParameterJdbcTemplate.update(UPDATE, params);
     }
 }

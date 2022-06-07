@@ -1,5 +1,6 @@
 package ibichos.foundation.monolith.dao;
 
+import ibichos.foundation.monolith.mapper.MerchantsMapper;
 import ibichos.foundation.monolith.model.Merchant;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,11 @@ public class MerchantsDAO extends AbstractDAO {
             "FROM merchants m " +
             "WHERE m.merchant_id=:merchant_id";
 
+    private static final String UPDATE = "/* MerchantsDAO */ " +
+            "UPDATE merchants " +
+            "SET social_name = :social_name, owner_name = :owner_name, cnpj = :cnpj, phone = :phone, address = :address " +
+            "WHERE merchant_id::varchar = :merchant_id AND email = :email ";
+
     public MerchantsDAO(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         super(namedParameterJdbcTemplate);
     }
@@ -65,7 +71,7 @@ public class MerchantsDAO extends AbstractDAO {
         Map<String, String> params = new HashMap<>();
         params.put("email", email);
 
-        return namedParameterJdbcTemplate.query(SELECT_MERCHANT_BY_EMAIL, params, MerchantsRowMapper.getInstance()).stream().findFirst();
+        return namedParameterJdbcTemplate.query(SELECT_MERCHANT_BY_EMAIL, params, MerchantsMapper.getInstance()).stream().findFirst();
     }
 
     public Optional<Merchant> selectByEmailAndPassword(String email, String password) {
@@ -73,13 +79,26 @@ public class MerchantsDAO extends AbstractDAO {
         params.put("email", email);
         params.put("password", password);
 
-        return namedParameterJdbcTemplate.query(SELECT_MERCHANT_BY_EMAIL_AND_PASSWORD, params, MerchantsRowMapper.getInstance()).stream().findFirst();
+        return namedParameterJdbcTemplate.query(SELECT_MERCHANT_BY_EMAIL_AND_PASSWORD, params, MerchantsMapper.getInstance()).stream().findFirst();
     }
 
     public Optional<Merchant> selectById(UUID merchantId) {
         Map<String, UUID> params = new HashMap<>();
         params.put("merchant_id", merchantId);
 
-        return namedParameterJdbcTemplate.query(SELECT_MERCHANT_BY_ID, params, MerchantsRowMapper.getInstance()).stream().findFirst();
+        return namedParameterJdbcTemplate.query(SELECT_MERCHANT_BY_ID, params, MerchantsMapper.getInstance()).stream().findFirst();
+    }
+
+    public void update(Merchant merchant) {
+        Map<String, String> params = new HashMap<>();
+        params.put("merchant_id", merchant.getMerchantId().toString());
+        params.put("social_name", merchant.getSocialName());
+        params.put("owner_name", merchant.getOwnerName());
+        params.put("email", merchant.getEmail());
+        params.put("cnpj", merchant.getCnpj());
+        params.put("phone", merchant.getPhone());
+        params.put("address", merchant.getAddress());
+
+        namedParameterJdbcTemplate.update(UPDATE, params);
     }
 }
